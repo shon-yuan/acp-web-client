@@ -1,6 +1,6 @@
 {
   "name": "acp-react-hooks",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "React hooks for Agent Client Protocol (ACP)",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

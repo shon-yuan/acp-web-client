@@ -8,7 +8,6 @@ import json
 import sys
 import time
 import uuid
-import random
 
 
 def send_message(msg):
@@ -61,7 +60,7 @@ def handle_session_prompt(request):
     """Handle session/prompt request"""
     session_id = request["params"]["sessionId"]
     prompt = request["params"]["prompt"][0]["text"]
-    
+
     # Simulate streaming response
     words = [
         "Hello! ",
@@ -74,9 +73,7 @@ def handle_session_prompt(request):
         "said: ",
         "\"", prompt, "\""
     ]
-    
-    request_id = request["id"]
-    
+
     # Send streaming chunks
     full_text = ""
     for word in words:
@@ -94,7 +91,7 @@ def handle_session_prompt(request):
         }
         send_message(notification)
         time.sleep(0.05)
-    
+
     # Send final message with full content
     final_notification = {
         "jsonrpc": "2.0",
@@ -108,7 +105,7 @@ def handle_session_prompt(request):
         }
     }
     send_message(final_notification)
-    
+
     return {"stopReason": "end_turn"}
 
 
@@ -119,13 +116,13 @@ def main():
             line = input()
             if not line:
                 continue
-            
+
             request = json.loads(line)
             method = request.get("method", "")
             request_id = request.get("id")
-            
+
             result = None
-            
+
             if method == "initialize":
                 result = handle_initialize(request)
             elif method == "session/new":
@@ -136,7 +133,7 @@ def main():
                 result = handle_session_prompt(request)
             else:
                 result = {}
-            
+
             # Send response if it's a request (has id)
             if request_id is not None:
                 response = {
@@ -145,7 +142,7 @@ def main():
                     "result": result
                 }
                 send_message(response)
-                
+
         except EOFError:
             break
         except json.JSONDecodeError as e:
