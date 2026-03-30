@@ -210,8 +210,17 @@ class ACPClient:
                 writer_transport, writer_protocol, None, loop
             )
 
+            # Set up async stderr reader to avoid blocking the event loop
+            self._stderr_reader = asyncio.StreamReader(limit=1024 * 1024)
+            stderr_protocol = asyncio.StreamReaderProtocol(self._stderr_reader)
+            await loop.connect_read_pipe(lambda: stderr_protocol, self.process.stderr)
+
             # Start message reader task
             asyncio.create_task(self._read_messages())
+            asyncio.create_task(self._read_stderr())
+
+            # Start process monitor - detects provider crash
+            asyncio.create_task(self._monitor_process())
 
             # Perform initialization
             await self._initialize()
@@ -338,6 +347,9 @@ class ACPClient:
 
     async def send_request(self, method: str, params: Dict) -> Dict:
         """Send a JSON-RPC request and wait for response"""
+        if self.state in (ACPState.DISCONNECTED, ACPState.ERROR):
+            raise ACPConnectionError("Not connected")
+
         async with self._lock:
             self._request_counter += 1
             request_id = self._request_counter
@@ -357,7 +369,7 @@ class ACPClient:
 
         try:
             # Wait for response with timeout
-            response = await asyncio.wait_for(future, timeout=300.0)
+            response = await asyncio.wait_for(future, timeout=30.0)
             if response.error:
                 raise ACPError(f"RPC Error: {response.error}")
             return response.result or {}
@@ -403,6 +415,50 @@ class ACPClient:
             pass
         finally:
             self.state = ACPState.DISCONNECTED
+            # Cancel pending requests since provider is gone
+            for req_id, future in list(self._pending_requests.items()):
+                if not future.done():
+                    future.set_exception(
+                        ACPConnectionError("Provider process exited")
+                    )
+            self._pending_requests.clear()
+
+    async def _read_stderr(self) -> None:
+        """Read stderr from provider process and log it"""
+        try:
+            while True:
+                line = await self._stderr_reader.readline()
+                if not line:
+                    break
+                print(f"[ACP stderr] {line.decode('utf-8', errors='replace').strip()}",
+                      flush=True)
+        except Exception:
+            pass
+
+    async def _monitor_process(self) -> None:
+        """Monitor provider process and cancel pending requests if it dies"""
+        try:
+            while self.process and self.process.poll() is None:
+                await asyncio.sleep(0.5)
+            # Process has exited
+            if self.state != ACPState.DISCONNECTED:
+                retcode = self.process.poll() if self.process else -1
+                print(f"[ACP] Provider process exited with code {retcode}",
+                      flush=True)
+                self.state = ACPState.ERROR
+                # Cancel all pending requests so callers get errors
+                for req_id, future in list(self._pending_requests.items()):
+                    if not future.done():
+                        future.set_exception(
+                            ACPConnectionError(
+                                f"Provider process exited (code={retcode})"
+                            )
+                        )
+                self._pending_requests.clear()
+        except asyncio.CancelledError:
+            pass
+        except Exception:
+            pass
 
     async def _handle_message(self, data: Dict) -> None:
         """Handle incoming JSON-RPC message"""
@@ -557,8 +613,11 @@ class ACPClient:
     async def close(self) -> None:
         """Close the ACP connection"""
         if self.writer:
-            self.writer.close()
-            await self.writer.wait_closed()
+            try:
+                self.writer.close()
+                await self.writer.wait_closed()
+            except (NotImplementedError, Exception):
+                pass
 
         if self.process:
             self.process.terminate()

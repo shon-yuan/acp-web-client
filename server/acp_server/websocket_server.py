@@ -276,7 +276,10 @@ class ACPWebBridge:
                 }
 
             # Connect to ACP provider
+            print(f"[ACP] Connecting to {provider_config['cmd']} "
+                  f"{provider_config['args']}", flush=True)
             await acp_client.connect(env=connect_env)
+            print(f"[ACP] Connected successfully", flush=True)
 
             conn_state['acp_client'] = acp_client
             conn_state['status'] = 'ready'

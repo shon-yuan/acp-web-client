@@ -141,7 +141,7 @@ function ChatLayout() {
         </header>
 
         {/* Content Area */}
-        {!hasSessions ? (
+        {!hasCurrentSession && !hasSessions ? (
           <EmptySessionState onCreateSession={() => createSession()} />
         ) : !hasCurrentSession ? (
           <div className="flex-1 flex flex-col items-center justify-center">
