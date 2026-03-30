@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'highlight.js/styles/github-dark.css';
+
+:root {
+  --github-bg: #0d1117;
+  --github-surface: #161b22;
+  --github-surface-hover: #1f242c;
+  --github-border: #30363d;
+  --github-border-light: #21262d;
+  --github-text: #c9d1d9;
+  --github-text-primary: #f0f6fc;
+  --github-muted: #8b949e;
+  --github-accent: #58a6ff;
+  --github-accent-hover: #79c0ff;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--github-bg);
+  color: var(--github-text);
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--github-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--github-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--github-muted);
+}
+
+/* 选中样式 */
+::selection {
+  background-color: rgba(88, 166, 255, 0.3);
+  color: var(--github-text-primary);
+}
+
+/* Markdown 样式 */
+.markdown-body {
+  color: var(--github-text);
+  line-height: 1.6;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  color: var(--github-text-primary);
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.markdown-body h1 { font-size: 1.5rem; }
+.markdown-body h2 { font-size: 1.25rem; }
+.markdown-body h3 { font-size: 1.125rem; }
+
+.markdown-body p {
+  margin-bottom: 0.75rem;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+
+.markdown-body li {
+  margin-bottom: 0.25rem;
+}
+
+.markdown-body code {
+  background-color: rgba(110, 118, 129, 0.4);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Consolas, Liberation Mono, Menlo, monospace;
+  font-size: 0.875em;
+}
+
+.markdown-body pre {
+  background-color: #161b22;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  border: 1px solid var(--github-border);
+}
+
+.markdown-body pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.875rem;
+}
+
+.markdown-body blockquote {
+  border-left: 4px solid var(--github-accent);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--github-muted);
+}
+
+.markdown-body a {
+  color: var(--github-accent);
+  text-decoration: none;
+}
+
+.markdown-body a:hover {
+  text-decoration: underline;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--github-border);
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.markdown-body th {
+  background-color: var(--github-surface);
+  font-weight: 600;
+}
+
+.markdown-body tr:nth-child(even) {
+  background-color: rgba(22, 27, 34, 0.5);
+}
+
+.markdown-body hr {
+  border: none;
+  border-top: 1px solid var(--github-border);
+  margin: 1.5rem 0;
+}
+
+/* 内联代码 */
+.inline-code {
+  background-color: rgba(110, 118, 129, 0.4);
+  padding: 0.125rem 0.25rem;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Consolas, Liberation Mono, Menlo, monospace;
+  font-size: 0.875em;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-25%); }
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+/* 打字机光标 */
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}

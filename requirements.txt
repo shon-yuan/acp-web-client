@@ -1,0 +1,4 @@
+# ACP Web Client Python Dependencies
+
+# WebSocket support
+websockets>=12.0

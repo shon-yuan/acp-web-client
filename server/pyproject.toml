@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acp-web-server"
+version = "1.0.0"
+description = "WebSocket bridge server for Agent Client Protocol (ACP)"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "ACP Team", email = "shadyuan@gmail.com"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "websockets>=12.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.0",
+    "flake8>=6.0",
+    "mypy>=1.0",
+]
+
+[project.scripts]
+acp-web-server = "acp_server:run_server"
+
+[project.urls]
+Homepage = "https://github.com/shon-yuan/acp-web-client"
+Documentation = "https://github.com/shon-yuan/acp-web-client#readme"
+Repository = "https://github.com/shon-yuan/acp-web-client.git"
+Issues = "https://github.com/shon-yuan/acp-web-client/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["acp_server*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false

@@ -1,0 +1,52 @@
+{
+  "name": "acp-react-hooks",
+  "version": "1.0.0",
+  "description": "React hooks for Agent Client Protocol (ACP)",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/hooks/index.ts --format cjs,esm --dts --clean --tsconfig tsconfig.build.json",
+    "dev": "tsup src/hooks/index.ts --format cjs,esm --dts --watch --tsconfig tsconfig.build.json",
+    "lint": "eslint src/hooks --ext .ts,.tsx",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "acp",
+    "agent-client-protocol",
+    "react",
+    "hooks",
+    "websocket",
+    "ai",
+    "claude",
+    "kimi"
+  ],
+  "author": "ACP Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shon-yuan/acp-web-client.git",
+    "directory": "frontend"
+  },
+  "bugs": {
+    "url": "https://github.com/shon-yuan/acp-web-client/issues"
+  },
+  "homepage": "https://github.com/shon-yuan/acp-web-client#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.0.0"
+  }
+}
