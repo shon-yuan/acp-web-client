@@ -1,5 +1,5 @@
 {
-  "name": "acp-react-hooks",
+  "name": "@shon-yuan/acp-react-hooks",
   "version": "0.1.0",
   "description": "React hooks for Agent Client Protocol (ACP)",
   "main": "dist/index.js",
